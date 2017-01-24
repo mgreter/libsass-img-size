@@ -1,0 +1,15 @@
+test {
+
+	png-size: img-size("img/test.png");
+	gif-size: img-size("img/test.gif");
+	jpg-size: img-size("img/test.jpg");
+
+	png-width: img-width("img/test.png");
+	gif-width: img-width("img/test.gif");
+	jpg-width: img-width("img/test.jpg");
+
+	png-height: img-height("img/test.png");
+	gif-height: img-height("img/test.gif");
+	jpg-height: img-height("img/test.jpg");
+
+}

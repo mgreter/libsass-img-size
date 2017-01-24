@@ -1,0 +1,10 @@
+test {
+  png-size: 42px 17px;
+  gif-size: 37px 14px;
+  jpg-size: 64px 32px;
+  png-width: 42px;
+  gif-width: 37px;
+  jpg-width: 64px;
+  png-height: 17px;
+  gif-height: 14px;
+  jpg-height: 32px; }
