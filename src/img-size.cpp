@@ -101,7 +101,7 @@ bool get_image_size(const char *fn, size_t *x,size_t *y)
 union Sass_Value* fn_img_size(const union Sass_Value* s_args, Sass_Function_Entry cb, struct Sass_Compiler* comp)
 {
   IMPLEMENT_IMG_SIZE(img_size)
-  union Sass_Value* list = sass_make_list(2, SASS_SPACE, false);
+  union Sass_Value* list = sass_make_list(2, SASS_SPACE);
   union Sass_Value* width = sass_make_number(w, "px");
   union Sass_Value* height = sass_make_number(h, "px");
   sass_list_set_value (list, 0, width);
