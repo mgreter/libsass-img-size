@@ -1,5 +1,6 @@
 #include <cstring>
 #include <iostream>
+#include <stdio.h>
 #include "sass.h"
 
 // this function floats around the net since a long time
