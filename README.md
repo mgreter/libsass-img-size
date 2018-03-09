@@ -11,9 +11,9 @@ need any 3rd party image libraries to get the job done.
 
 ## Building
 
-You need to have [libsass] [1] already [compiled] [2] or [installed] [3] as a
+You need to have [libsass][1] already [compiled][2] or [installed][3] as a
 shared library (inclusive header files). It is then compiled via `cmake`. See
-this example to compile it on windows via [MinGW] [4] Compiler Suite:
+this example to compile it on windows via [MinGW][4] Compiler Suite:
 
 ```cmd
 git clone https://github.com/sass/libsass.git
@@ -39,7 +39,7 @@ used. If no file can be found, a error is raised.
 
 ## Copyright
 
-© 2017 [Marcel Greter] [5]
+© 2017 [Marcel Greter][5]
 
 [1]: https://github.com/sass/libsass
 [2]: https://github.com/sass/libsass/wiki/Building-Libsass
