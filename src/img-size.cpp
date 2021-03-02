@@ -73,10 +73,10 @@ bool get_image_size(const char *fn, size_t *x,size_t *y)
   if (!sass_value_is_list(s_args)) { \
     return sass_make_error("Invalid arguments for " #fn); \
   } \
-  if (sass_list_get_length(s_args) != 1) { \
+  if (sass_list_get_size(s_args) != 1) { \
     return sass_make_error("Exactly one arguments expected for " #fn); \
   } \
-  const union Sass_Value* inp = sass_list_get_value(s_args, 0); \
+  struct SassValue* inp = sass_list_get_value(s_args, 0); \
   if (!sass_value_is_string(inp)) { \
     return sass_make_error("You must pass a string into " #fn); \
   } \
@@ -86,43 +86,46 @@ bool get_image_size(const char *fn, size_t *x,size_t *y)
     return sass_make_error("Image filename is empty"); \
   } \
   \
-  std::string path(sass_compiler_find_file(url.c_str(), comp)); \
+  char* path = sass_compiler_find_file(url.c_str(), comp); \
   \
-  if (path.empty()) { \
+  if (path == 0 || *path == 0) { \
     std::string errmsg("Image url not found: "); \
     errmsg += url; \
+    sass_free_c_string(path); \
     return sass_make_error(errmsg.c_str()); \
   } \
   \
   size_t w = 0, h = 0; \
-  if (!get_image_size(path.c_str(), &w, &h)) { \
+  if (!get_image_size(path, &w, &h)) { \
     std::string errmsg("Error reading image size: "); \
     errmsg += url; \
+    sass_free_c_string(path); \
     return sass_make_error(errmsg.c_str()); \
   } \
+  sass_free_c_string(path); \
 
 
 // return dimensions as a list with space delimiters
-union Sass_Value* fn_img_size(const union Sass_Value* s_args, Sass_Function_Entry cb, struct Sass_Compiler* comp)
+struct SassValue* fn_img_size(struct SassValue* s_args, struct SassCompiler* comp)
 {
   IMPLEMENT_IMG_SIZE(img_size)
-  union Sass_Value* list = sass_make_list(2, SASS_SPACE, false);
-  union Sass_Value* width = sass_make_number(w, "px");
-  union Sass_Value* height = sass_make_number(h, "px");
-  sass_list_set_value (list, 0, width);
-  sass_list_set_value (list, 1, height);
+  struct SassValue* list = sass_make_list(SASS_SPACE, false);
+  struct SassValue* width = sass_make_number(w, "px");
+  struct SassValue* height = sass_make_number(h, "px");
+  sass_list_push (list, width);
+  sass_list_push (list, height);
   return list;
 }
 
 // return the width as a number with px as unit
-union Sass_Value* fn_img_width(const union Sass_Value* s_args, Sass_Function_Entry cb, struct Sass_Compiler* comp)
+struct SassValue* fn_img_width(struct SassValue  * s_args, struct SassCompiler* comp)
 {
   IMPLEMENT_IMG_SIZE(img_size)
   return sass_make_number(w, "px");
 }
 
 // return the height as a number with px as unit
-union Sass_Value* fn_img_height(const union Sass_Value* s_args, Sass_Function_Entry cb, struct Sass_Compiler* comp)
+struct SassValue* fn_img_height(struct SassValue* s_args, struct SassCompiler* comp)
 {
   IMPLEMENT_IMG_SIZE(img_size)
   return sass_make_number(h, "px");
@@ -134,18 +137,12 @@ extern "C" const char* ADDCALL libsass_get_version() {
 }
 
 // entry point for libsass to request custom functions from plugin
-extern "C" Sass_Function_List ADDCALL libsass_load_functions()
+extern "C" void ADDCALL libsass_init_plugin(struct SassCompiler* compiler)
 {
 
-  // create list of all custom functions
-  Sass_Function_List fn_list = sass_make_function_list(3);
-
-  // math/exponentiation functions
-  sass_function_set_list_entry(fn_list,  0, sass_make_function("img-size($url)", fn_img_size, 0));
-  sass_function_set_list_entry(fn_list,  1, sass_make_function("img-width($url)", fn_img_width, 0));
-  sass_function_set_list_entry(fn_list,  2, sass_make_function("img-height($url)", fn_img_height, 0));
-
-  // return the list
-  return fn_list;
+  // register image size functions with compiler
+  sass_compiler_add_custom_function(compiler, sass_make_function("img-size($url)", fn_img_size, 0));
+  sass_compiler_add_custom_function(compiler, sass_make_function("img-width($url)", fn_img_width, 0));
+  sass_compiler_add_custom_function(compiler, sass_make_function("img-height($url)", fn_img_height, 0));
 
 }
