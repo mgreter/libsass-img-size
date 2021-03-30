@@ -106,7 +106,7 @@ bool get_image_size(const char *fn, size_t *x,size_t *y)
 
 
 // return dimensions as a list with space delimiters
-struct SassValue* fn_img_size(struct SassValue* s_args, struct SassCompiler* comp)
+struct SassValue* fn_img_size(struct SassValue* s_args, struct SassCompiler* comp, void*)
 {
   IMPLEMENT_IMG_SIZE(img_size)
   struct SassValue* list = sass_make_list(SASS_SPACE, false);
@@ -118,14 +118,14 @@ struct SassValue* fn_img_size(struct SassValue* s_args, struct SassCompiler* com
 }
 
 // return the width as a number with px as unit
-struct SassValue* fn_img_width(struct SassValue  * s_args, struct SassCompiler* comp)
+struct SassValue* fn_img_width(struct SassValue  * s_args, struct SassCompiler* comp, void*)
 {
   IMPLEMENT_IMG_SIZE(img_size)
   return sass_make_number(w, "px");
 }
 
 // return the height as a number with px as unit
-struct SassValue* fn_img_height(struct SassValue* s_args, struct SassCompiler* comp)
+struct SassValue* fn_img_height(struct SassValue* s_args, struct SassCompiler* comp, void*)
 {
   IMPLEMENT_IMG_SIZE(img_size)
   return sass_make_number(h, "px");
